@@ -29,3 +29,4 @@ switch ($data->type) {
         echo 'ok';
         break;
 }
+//checking git hook on update
