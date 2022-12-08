@@ -1,5 +1,5 @@
 <?php
-$confirmation_token = "762058dc";
+$confirmation_token = "e6f7125a";
 function vk_msg_send($peer_id,$text){
     $access_token = "vk1.a._yZ8p18plSQOmZiPgtYyeO2muWSzEC_ODtMLqaBdCJNHAmkvazycnE2d42YMRaKbOSKb-kxYNsOOD_LcvQhzM_WjJKvNrYwacJF1NhToBYyd3gFnxyW9bMfjOVmCK8hHSi86BBzDEqHz3eniRoE1vqfYZLV9rdV9lM07yrx2YB8KJkxfiO2-vOPAMPDI7vW-zzYzf5RDDNv0MtU-lrmA_w";
     $request_params = array(
