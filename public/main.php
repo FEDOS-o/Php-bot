@@ -35,7 +35,7 @@ use VK\Client\VKApiClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$vk = new VKApiClient('5.131');
+$vk = new VKApiClient('5.73');
 $handler = new ServerHandler();
 $data = json_decode(file_get_contents('php://input'));
 $handler->parse($data);
