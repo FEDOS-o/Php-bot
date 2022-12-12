@@ -31,9 +31,11 @@
 //}
 ////checking git hook on update2
 use App\Controllers\ServerHandler;
+use VK\Client\VKApiClient;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+$vk = new VKApiClient('5.131');
 $handler = new ServerHandler();
 $data = json_decode(file_get_contents('php://input'));
 $handler->parse($data);
