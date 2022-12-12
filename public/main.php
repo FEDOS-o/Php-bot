@@ -5,7 +5,7 @@ use App\Controllers\ServerHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $log = new Logger('logger');
 $log->pushHandler(new StreamHandler('../log.log'));
