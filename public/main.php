@@ -32,7 +32,7 @@
 ////checking git hook on update2
 use App\Controllers\ServerHandler;
 
-require __DIR__ . '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $handler = new ServerHandler();
 $data = json_decode(file_get_contents('php://input'));

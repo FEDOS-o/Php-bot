@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use VK\CallbackApi\Server\VKCallbackApiServerHandler;
 
-require __DIR__ . '../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 class ServerHandler extends VKCallbackApiServerHandler
 {
