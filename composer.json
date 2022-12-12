@@ -1,4 +1,14 @@
 {
-  "require-dev": {
+  "require": {
+    "guzzlehttp/guzzle": "^7.5",
+    "paquettg/php-html-parser": "^3.1"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "Public\\" : "public/",
+      "App\\" : "src/"
+    }
+
   }
 }
