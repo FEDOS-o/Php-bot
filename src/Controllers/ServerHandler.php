@@ -18,7 +18,9 @@ class ServerHandler extends VKCallbackApiServerHandler
     }
 
     function confirmation(int $group_id, ?string $secret) {
-        $this->log->debug($secret);
+        if ($secret !== null) {
+            $this->log->debug($secret);
+        }
         if ($secret === static::SECRET && $group_id === static::GROUP_ID) {
             echo static::CONFIRMATION_TOKEN;
         }
