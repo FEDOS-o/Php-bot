@@ -8,27 +8,32 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 class ServerHandler extends VKCallbackApiServerHandler
 {
-    const SECRET = 'vk1.a._yZ8p18plSQOmZiPgtYyeO2muWSzEC_ODtMLqaBdCJNHAmkvazycnE2d42YMRaKbOSKb-kxYNsOOD_LcvQhzM_WjJKvNrYwacJF1NhToBYyd3gFnxyW9bMfjOVmCK8hHSi86BBzDEqHz3eniRoE1vqfYZLV9rdV9lM07yrx2YB8KJkxfiO2-vOPAMPDI7vW-zzYzf5RDDNv0MtU-lrmA_w';
+    const TOKEN = 'vk1.a._yZ8p18plSQOmZiPgtYyeO2muWSzEC_ODtMLqaBdCJNHAmkvazycnE2d42YMRaKbOSKb-kxYNsOOD_LcvQhzM_WjJKvNrYwacJF1NhToBYyd3gFnxyW9bMfjOVmCK8hHSi86BBzDEqHz3eniRoE1vqfYZLV9rdV9lM07yrx2YB8KJkxfiO2-vOPAMPDI7vW-zzYzf5RDDNv0MtU-lrmA_w';
+    const SECRET = 'aaQ1fsdf9ornzqwemc';
     const GROUP_ID = 217490194;
     const CONFIRMATION_TOKEN = 'd63edc31';
     public $log;
 
-    function __construct($log) {
+    function __construct($log)
+    {
         $this->log = $log;
     }
 
-    function confirmation(int $group_id, ?string $secret) {
-        if ($secret !== null) {
-            $this->log->debug($secret);
-        }
-        if ($group_id === static::GROUP_ID) {
-            echo static::CONFIRMATION_TOKEN;
+    function confirmation(int $group_id, ?string $secret)
+    {
+        if ($secret !== static::SECRET) {
+            $this->log->debug('secret key is invalid');
             return;
         }
-        echo "kek";
+        if ($group_id !== static::GROUP_ID) {
+            $this->log->debug('group id is invalid');
+            return;
+        }
+        echo static::CONFIRMATION_TOKEN;
     }
 
-    public function parse($event) {
+    public function parse($event)
+    {
         if ($event->type == static::CALLBACK_EVENT_CONFIRMATION) {
             $this->confirmation($event->group_id, $event->secret);
         } else {
@@ -39,7 +44,7 @@ class ServerHandler extends VKCallbackApiServerHandler
             $this->log->debug("Received message of type $type from group $group_id: " . json_encode($object));
             if (
                 $secret !== static::SECRET ||
-                strval($group_id) !== static::GROUP_ID
+                $group_id !== static::GROUP_ID
             ) {
                 $this->log->debug("Secret key or group id is invalid");
                 return;
@@ -48,7 +53,8 @@ class ServerHandler extends VKCallbackApiServerHandler
         }
     }
 
-    public function messageNew(int $group_id, ?string $secret, array $object) {
+    public function messageNew(int $group_id, ?string $secret, array $object)
+    {
         echo 'ok';
     }
 }
