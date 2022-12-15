@@ -28,6 +28,26 @@ class ServerHandler extends VKCallbackApiServerHandler
         echo "kek";
     }
 
+    public function parse($event) {
+        if ($event->type == static::CALLBACK_EVENT_CONFIRMATION) {
+            $this->confirmation($event->group_id, $event->secret);
+        } else {
+            $group_id = $event->group_id;
+            $secret = $event->secret;
+            $type = $event->type;
+            $object = (array)$event->object;
+            $this->log->debug("Received message of type $type from group $group_id: " . json_encode($object));
+            if (
+                $secret !== static::SECRET ||
+                strval($group_id) !== static::GROUP_ID
+            ) {
+                $this->log->debug("Secret key or group id is invalid");
+                return;
+            }
+            $this->parseObject($group_id, $secret, $type, $object);
+        }
+    }
+
     public function messageNew(int $group_id, ?string $secret, array $object) {
         echo 'ok';
     }
