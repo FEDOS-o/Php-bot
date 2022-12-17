@@ -90,6 +90,7 @@ class ServerHandler extends VKCallbackApiServerHandler
                 if ($this->min_years_validation($text)) {
                     $this->db->update_status($chat_id, 3);
                     $this->db->update_min_years($chat_id, intval($text));
+                    $this->vk->vk_msg_send($chat_id, "Укажите максимальный год выхода фильма");
                 } else {
                     $this->vk->vk_msg_send($chat_id, "Нет, введите год между 1920 и 2022 включительно");
                 }
