@@ -64,6 +64,7 @@ class ServerHandler extends VKCallbackApiServerHandler
 
     public function messageNew(int $group_id, ?string $secret, array $object)
     {
+        $this->logger->info("Handling messageNew event");
         $chat_id = $object['peer_id'];
         $status = $this->db->get_status($chat_id);
         $text = $object['message']['text'];
