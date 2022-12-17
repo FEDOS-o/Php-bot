@@ -29,3 +29,5 @@ $data = json_decode(file_get_contents('php://input'));
 
 $logger->info("Start handling request");
 $handler->parse($data);
+
+$connection->close();
