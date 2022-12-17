@@ -13,7 +13,7 @@ $logger->pushHandler(new StreamHandler('../log.log'));
 $logger->info('Server started');
 
 $logger->info("Starting connection to data base");
-$connection = mysqli_connect("localhost", "root@localhost", "wsp6WYmX", "VK_BOT");
+$connection = mysqli_connect("localhost", "root", "wsp6WYmX", "VK_BOT");
 if (!$connection) {
     $logger->error("Connection failed");
 }
