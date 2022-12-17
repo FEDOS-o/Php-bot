@@ -94,6 +94,7 @@ class ServerHandler extends VKCallbackApiServerHandler
                 } else {
                     $this->vk->vk_msg_send($chat_id, "Нет, введите год между 1920 и 2022 включительно");
                 }
+                break;
             case 3:
                 $res = intval($text);
                 $min_years = $this->db->get_min_years($chat_id);
@@ -106,6 +107,7 @@ class ServerHandler extends VKCallbackApiServerHandler
                 } else {
                     $this->vk->vk_msg_send($chat_id, "Нет, введите год между " . $min_years . " и 2022 включительно");
                 }
+                break;
         }
         echo 'ok';
     }
