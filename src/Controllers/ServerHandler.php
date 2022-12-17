@@ -66,7 +66,8 @@ class ServerHandler extends VKCallbackApiServerHandler
     {
         $chat_id = $object['peer_id'];
         $status = $this->db->get_status($chat_id);
-        if ($object['message'] == '/start') {
+        $text = $object['message']['text'];
+        if ($text == '/start') {
             $this->db->update_status($chat_id, 0);
             $status = 0;
         }
@@ -76,27 +77,27 @@ class ServerHandler extends VKCallbackApiServerHandler
                 $this->db->update_status($chat_id, 1);
                 break;
             case 1:
-                if ($this->count_validation($object['message'])) {
+                if ($this->count_validation($text)) {
                     $this->db->update_status($chat_id, 2);
-                    $this->db->update_count($chat_id, intval($object['message']));
+                    $this->db->update_count($chat_id, intval($text));
                     $this->vk->vk_msg_send($chat_id, "Укажите минимальный год выхода фильма");
                 } else {
                     $this->vk->vk_msg_send($chat_id, "Нет, вас не может быть столько. Попробуйте еще раз ввести число от 2 до 20");
                 }
                 break;
             case 2:
-                if ($this->min_years_validation($object['message'])) {
+                if ($this->min_years_validation($text)) {
                     $this->db->update_status($chat_id, 3);
-                    $this->db->update_min_years($chat_id, intval($object['message']));
+                    $this->db->update_min_years($chat_id, intval($text));
                 } else {
                     $this->vk->vk_msg_send($chat_id, "Нет, введите год между 1920 и 2022 включительно");
                 }
             case 3:
-                $res = intval($object['message']);
+                $res = intval($text);
                 $min_years = $this->db->get_min_years($chat_id);
                 if ($this->max_years_validation($res,  $min_years)) {
                     $this->db->update_status($chat_id, 4);
-                    $this->db->update_max_years($chat_id, intval($object['message']));
+                    $this->db->update_max_years($chat_id, intval($text));
                     $this->vk->vk_msg_send($chat_id, "Подбираю вам случайные фильмы");
                 } else if ($res < 1920 || $res > 2022) {
                     $this->vk->vk_msg_send($chat_id, "Нет, введите год между 1920 и 2022 включительно");
