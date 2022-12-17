@@ -98,7 +98,7 @@ class ServerHandler extends VKCallbackApiServerHandler
             case 3:
                 $res = intval($text);
                 $min_years = $this->db->get_min_years($chat_id);
-                if ($this->max_years_validation($res,  $min_years)) {
+                if (is_integer($text) && $this->max_years_validation($res,  $min_years)) {
                     $this->db->update_status($chat_id, 4);
                     $this->db->update_max_years($chat_id, intval($text));
                     $this->vk->vk_msg_send($chat_id, "Подбираю вам случайные фильмы");
@@ -114,15 +114,20 @@ class ServerHandler extends VKCallbackApiServerHandler
 
     private function count_validation($value) : bool {
         $res = intval($value);
-        return !($res <= 1 || $res > 20);
+        return !(!is_integer($value) || $res <= 1 || $res > 20);
     }
 
     private function min_years_validation($value) : bool {
         $res = intval($value);
-        return ($res >= 1920 && $res <= 2022);
+        return (is_integer($value) && $res >= 1920 && $res <= 2022);
     }
 
-    public function max_years_validation($res, $min_years) : bool {
+    private function max_years_validation($res, $min_years) : bool {
         return ($res >= 1920 && $res <= 2022 && $res >= $min_years);
     }
+
+    private function is_integer($value) {
+        return preg_match("/^\d+$/", $value);
+    }
+
 }
