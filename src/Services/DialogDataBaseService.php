@@ -42,7 +42,7 @@ class DialogDataBaseService
     }
 
     public  function set_status($chat_id, $status) : bool {
-        $quarry = 'INSERT INTO Dialog (chat_id, status) (' . $chat_id . ', '  . $status . ');';
+        $quarry = 'INSERT INTO Dialog (chat_id, status) VALUES (' . $chat_id . ', '  . $status . ');';
 
         return mysqli_query($this->connection, $quarry);
     }
