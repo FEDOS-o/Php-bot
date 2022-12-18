@@ -118,9 +118,7 @@ class ServerHandler extends VKCallbackApiServerHandler
                 $count = $this->db->get_count($chat_id);
                 if ($count == 0) {
                     $this->vk->vk_msg_send($chat_id, "Чтобы выбрать еще 1 фильм напишите /start");
-                    break;
-                }
-                if ($this->kick_validation($text, $count)) {
+                } else if ($this->kick_validation($text, $count)) {
                     $kick = intval($text);
                     $list = unserialize($this->db->get_films_list($chat_id));
                     $new_list = array($count);
@@ -141,7 +139,7 @@ class ServerHandler extends VKCallbackApiServerHandler
                         $this->vk->vk_msg_send($chat_id, "Чтобы выбрать еще 1 фильм напишите /start");
                     }
                 } else {
-                    $this->vk->vk_msg_send($chat_id, "Нет, введите номер между 1 и" . $count + 1 . " включительно");
+                    $this->vk->vk_msg_send($chat_id, "Нет, введите номер между 1 и " . $count + 1 . " включительно");
                 }
                 break;
         }
