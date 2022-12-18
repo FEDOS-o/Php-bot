@@ -55,6 +55,6 @@ class HtmlParserService
     }
 
     function getDescription($dom) {
-        return $dom->getElementsByClass('syn')->text;
+        return preg_replace("/&nbsp;/", ' ', $dom->getElementsByClass('syn')->text);
     }
 }
