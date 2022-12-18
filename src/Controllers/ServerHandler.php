@@ -106,10 +106,13 @@ class ServerHandler extends VKCallbackApiServerHandler
                     $this->db->update_status($chat_id, 4);
                     $this->db->update_max_years($chat_id, intval($text));
                     $this->vk->vk_msg_send($chat_id, "Подбираю вам случайные фильмы...");
-                    $this->show_films($chat_id);
-                    $this->vk->vk_msg_send($chat_id, "Введите номер фильма, который не хотите смотреть");
-                } else if ($res < 1920 || $res > 2022) {
-                    $this->vk->vk_msg_send($chat_id, "Нет, введите год между 1920 и 2022 включительно");
+                    if ($this->show_films($chat_id)) {
+                        $this->vk->vk_msg_send($chat_id, "Введите номер фильма, который не хотите смотреть");
+                    } else {
+                        $this->vk->vk_msg_send($chat_id, "Не могу найти столько фильмов для вас в таком диапазоне. Давайте попробуем указать другой временной промежуток");
+                        $this->db->update_status($chat_id, 2);
+                        $this->vk->vk_msg_send($chat_id, "Укажите минимальный год выхода фильма");
+                    }
                 } else {
                     $this->vk->vk_msg_send($chat_id, "Нет, введите год между " . $min_years . " и 2022 включительно");
                 }
@@ -174,13 +177,16 @@ class ServerHandler extends VKCallbackApiServerHandler
         return preg_match("/^\d+$/", $value);
     }
 
-    private function show_films($chat_id)
+    private function show_films($chat_id) : bool
     {
         $count = $this->db->get_count($chat_id);
         $min_years = $this->db->get_min_years($chat_id);
         $max_years = $this->db->get_max_years($chat_id);
         $this->logger->debug("Parameters: count=" . $count . ", min_years=" . $min_years . ", max_years=" . $max_years);
         $films = $this->rnd_film->get_films(new FilmRequest($count + 1, $min_years, $max_years));
+        if (count($films) != $count + 1) {
+            return false;
+        }
         $number = 1;
         foreach ($films as $film) {
             $this->vk->vk_send_film($chat_id, $film, $number);
@@ -196,6 +202,7 @@ class ServerHandler extends VKCallbackApiServerHandler
         $this->vk->vk_msg_send($chat_id, "Итого:\n" . $this->print_list($films_names));
         $this->print_list($films_names);
         $this->db->update_films_list($chat_id, serialize($films_names));
+        return true;
     }
 
     private function print_list(array $list) : string
