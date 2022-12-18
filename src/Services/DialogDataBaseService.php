@@ -65,7 +65,7 @@ class DialogDataBaseService
     }
 
     public function update_films_list($chat_id, $value) : bool {
-        return $this->update($chat_id, $value, 'films_list');
+        return $this->update($chat_id, "'" . $value . "'", 'films_list');
     }
 
 
