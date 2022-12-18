@@ -48,7 +48,7 @@ class HtmlParserService
             $dom->getElementsByClass('info')->find('a')[3]->text .
             ', ' .
             $dom->getElementsByClass('info')->find('a')[4]->text;
-        $result = substr($result, strlen($result) - 6, 6);
+        $result = substr($result, 0, strlen($result) - 6);
         $result .= "...";
         return $result;
     }
@@ -59,7 +59,8 @@ class HtmlParserService
 
     function getDescription($dom) {
         $result = preg_replace("/&nbsp;/", ' ', $dom->getElementsByClass('syn')->text);
-        $result[strlen($result) - 1] = '.';
+        $result = substr($result, 0, strlen($result) - 6);
+        $result .= ".";
         return $result;
     }
 }
