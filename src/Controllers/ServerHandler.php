@@ -116,7 +116,7 @@ class ServerHandler extends VKCallbackApiServerHandler
                 break;
             default:
                 $count = $this->db->get_count($chat_id);
-                if ($count == 0) {
+                if ($count == 1) {
                     $this->vk->vk_msg_send($chat_id, "Чтобы выбрать еще 1 фильм напишите /start");
                 } else if ($this->kick_validation($text, $count)) {
                     $kick = intval($text);
