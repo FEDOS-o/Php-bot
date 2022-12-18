@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Credentials\FilmRequest;
 use App\Services\DialogDataBaseService;
+use App\Services\RandomFilmService;
 use App\Services\VkApiService;
 use Monolog\Logger;
 use VK\CallbackApi\Server\VKCallbackApiServerHandler;
@@ -19,6 +21,7 @@ class ServerHandler extends VKCallbackApiServerHandler
     private Logger $logger;
     private DialogDataBaseService $db;
     private VKApiService $vk;
+    private RandomFilmService $rnd_film;
 
 
     function __construct($logger, $connection, $vkApi)
@@ -26,6 +29,7 @@ class ServerHandler extends VKCallbackApiServerHandler
         $this->logger = $logger;
         $this->db = new DialogDataBaseService($connection);
         $this->vk = new VkApiService($vkApi);
+        $this->rnd_film = new RandomFilmService();
     }
 
     function confirmation(int $group_id, ?string $secret)
@@ -101,7 +105,8 @@ class ServerHandler extends VKCallbackApiServerHandler
                 if ($this->is_integer($text) && $this->max_years_validation($res,  $min_years)) {
                     $this->db->update_status($chat_id, 4);
                     $this->db->update_max_years($chat_id, intval($text));
-                    $this->vk->vk_msg_send($chat_id, "Подбираю вам случайные фильмы");
+                    $this->vk->vk_msg_send($chat_id, "Подбираю вам случайные фильмы...");
+                    $this->show_films($chat_id);
                 } else if ($res < 1920 || $res > 2022) {
                     $this->vk->vk_msg_send($chat_id, "Нет, введите год между 1920 и 2022 включительно");
                 } else {
@@ -128,6 +133,25 @@ class ServerHandler extends VKCallbackApiServerHandler
 
     private function is_integer($value) : bool {
         return preg_match("/^\d+$/", $value);
+    }
+
+    private function show_films($chat_id) {
+        $count = $this->db->get_count($chat_id);
+        $min_years = $this->db->get_min_years($chat_id);
+        $max_years = $this->db->get_max_years($chat_id);
+        $this->logger->debug("Parameters: count=" . $count . ", min_years=" . $min_years . ", max_years=" . $max_years);
+        $films = $this->rnd_film->get_films(new FilmRequest($count, $min_years, $max_years));
+        $number = 1;
+        foreach ($films as $film) {
+            $this->vk->vk_send_film($chat_id, $film, $number);
+            $number++;
+        }
+        $list = "Итого:\n";
+        $number = 1;
+        foreach ($films as $film) {
+            $list .= $number . ": " . $film->name . "\n";
+        }
+        $this->vk->vk_msg_send($chat_id, $list);
     }
 
 }
