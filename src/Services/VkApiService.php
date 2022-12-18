@@ -37,7 +37,7 @@ class VkApiService
         $text .= $film->description . "\n";
         $text .= $film->film_link . "\n";
         $this->vk_msg_send($peer_id, $text);
-        $this->vk_send_img($peer_id, $film->poster_link);
+//        $this->vk_send_img($peer_id, $film->poster_link);
     }
 
     public function vk_send_img($peer_id, $img) : void
