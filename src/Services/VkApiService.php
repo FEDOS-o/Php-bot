@@ -40,7 +40,7 @@ class VkApiService
         $text .= $film->description . "\n";
         $text .= $film->film_link . "\n";
         $this->vk_msg_send($peer_id, $text);
-        $this->vk_send_img($peer_id, $film->poster_link);
+        //$this->vk_send_img($peer_id, $film->poster_link);
     }
 
     public function vk_send_img($peer_id, $img) : void
@@ -52,13 +52,13 @@ class VkApiService
         $address = $this->client->photos()->getMessagesUploadServer($this->access_token);
         $this->logger->debug($address['upload_url']);
         $photo = $this->client->getRequest()->upload($address['upload_url'], 'photo', $image_path);
-        $this->logger->debug($photo);
+        //$this->logger->debug($photo);
         $response_save_photo = $this->client->photos()->saveMessagesPhoto($this->access_token, [
             'server' => $photo['server'],
             'photo' => $photo['photo'],
             'hash' => $photo['hash'],
         ]);
-        $this->logger->debug($response_save_photo);
+        //$this->logger->debug($response_save_photo);
     }
 
 
