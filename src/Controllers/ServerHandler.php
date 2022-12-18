@@ -150,6 +150,7 @@ class ServerHandler extends VKCallbackApiServerHandler
         $number = 1;
         foreach ($films as $film) {
             $list .= $number . ": " . $film->name . "\n";
+            $number++;
         }
         $this->vk->vk_msg_send($chat_id, $list);
     }
