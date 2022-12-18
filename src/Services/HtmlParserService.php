@@ -23,7 +23,7 @@ class HtmlParserService
     }
 
     function getName($dom) {
-        return $dom->getElementsByClass('filmName')->find('a')[0]->text;
+        return  preg_replace("/&nbsp;/", ' ', $dom->getElementsByClass('filmName')->find('a')[0]->text);
     }
 
     function getFilmLink($dom) {
@@ -59,8 +59,8 @@ class HtmlParserService
 
     function getDescription($dom) {
         $result = preg_replace("/&nbsp;/", ' ', $dom->getElementsByClass('syn')->text);
-        $result = substr($result, 0, strlen($result) - 6);
-        $result .= ".";
+//        $result = substr($result, 0, strlen($result) - 6);
+//        $result .= ".";
         return $result;
     }
 }
