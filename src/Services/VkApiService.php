@@ -42,7 +42,7 @@ class VkApiService
 
     public function vk_send_img($peer_id, $img) : void
     {
-        $image_path = __DIR__ . "../../static/" . $peer_id;
+        $image_path = __DIR__ . "/../../static/" . $peer_id;
 
         copy($img, $image_path);
         $address = $this->client->photos()->getMessagesUploadServer($this->access_token);
