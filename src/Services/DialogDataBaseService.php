@@ -12,7 +12,7 @@ class DialogDataBaseService
     }
 
 
-    private function get($chat_id, $key) : int {
+    private function get($chat_id, $key) : mixed {
         $quarry = 'SELECT ' . $key . ' FROM Dialog WHERE chat_id=' . $chat_id . ';';
 
         $result = mysqli_query($this->connection, $quarry);
