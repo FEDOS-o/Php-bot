@@ -43,11 +43,14 @@ class HtmlParserService
     }
 
     function getActors($dom) {
-        return $dom->getElementsByClass('info')->find('a')[2]->text .
+        $result = $dom->getElementsByClass('info')->find('a')[2]->text .
             ', ' .
             $dom->getElementsByClass('info')->find('a')[3]->text .
             ', ' .
             $dom->getElementsByClass('info')->find('a')[4]->text;
+        $result[strlen($result) - 1] = '.';
+        $result .= "..";
+        return $result;
     }
 
     function getRating($dom) {
@@ -55,6 +58,7 @@ class HtmlParserService
     }
 
     function getDescription($dom) {
-        return preg_replace("/&nbsp;/", ' ', $dom->getElementsByClass('syn')->text);
+        $result = preg_replace("/&nbsp;/", ' ', $dom->getElementsByClass('syn')->text);
+        $result[strlen($result) - 1] = '.';
     }
 }
