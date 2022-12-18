@@ -41,7 +41,7 @@ class DialogDataBaseService
         return $this->get($chat_id, 'max_years');
     }
 
-    public function get_films_list($chat_id) : int {
+    public function get_films_list($chat_id) : string {
         return $this->get($chat_id, 'films_list');
     }
 
