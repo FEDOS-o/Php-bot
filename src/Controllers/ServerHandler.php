@@ -116,7 +116,7 @@ class ServerHandler extends VKCallbackApiServerHandler
                 break;
             default:
                 $count = $this->db->get_count($chat_id);
-                if ($count == 1) {
+                if ($count == 0) {
                     $this->vk->vk_msg_send($chat_id, "Чтобы выбрать еще 1 фильм напишите /start");
                 } else if ($this->kick_validation($text, $count)) {
                     $kick = intval($text);
@@ -129,8 +129,8 @@ class ServerHandler extends VKCallbackApiServerHandler
                             $j++;
                         }
                     }
+                    $this->db->update_count($chat_id, $count - 1);
                     if (count($new_list) != 1) {
-                        $this->db->update_count($chat_id, $count - 1);
                         $this->db->update_films_list($chat_id, serialize($new_list));
                         $this->vk->vk_msg_send($chat_id, "Остались:\n" . $this->print_list($new_list));
                         $this->vk->vk_msg_send($chat_id, "Введите номер фильма, который не хотите смотреть");
