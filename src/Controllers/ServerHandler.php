@@ -102,57 +102,104 @@ class ServerHandler extends VKCallbackApiServerHandler
             case 3:
                 $res = intval($text);
                 $min_years = $this->db->get_min_years($chat_id);
-                if ($this->is_integer($text) && $this->max_years_validation($res,  $min_years)) {
+                if ($this->is_integer($text) && $this->max_years_validation($res, $min_years)) {
                     $this->db->update_status($chat_id, 4);
                     $this->db->update_max_years($chat_id, intval($text));
                     $this->vk->vk_msg_send($chat_id, "Подбираю вам случайные фильмы...");
                     $this->show_films($chat_id);
+                    $this->vk->vk_msg_send($chat_id, "Введите номер фильма, который не хотите смотреть");
                 } else if ($res < 1920 || $res > 2022) {
                     $this->vk->vk_msg_send($chat_id, "Нет, введите год между 1920 и 2022 включительно");
                 } else {
                     $this->vk->vk_msg_send($chat_id, "Нет, введите год между " . $min_years . " и 2022 включительно");
                 }
                 break;
+            default:
+                $count = $this->db->get_count($chat_id);
+                if ($this->kick_validation($text, $count)) {
+                    $kick = intval($text);
+                    $list = unserialize($this->db->get_films_list($chat_id));
+                    $new_list = array($count);
+                    $j = 0;
+                    for ($i = 0; $i < $count + 1; $i++) {
+                        if ($i + 1 != $kick) {
+                            $new_list[$j] = $list[$i];
+                            $j++;
+                        }
+                    }
+                    if (count($new_list) != 1) {
+                        $this->db->update_count($chat_id, $count - 1);
+                        $this->db->update_films_list($chat_id, serialize($new_list));
+                        $this->vk->vk_msg_send($chat_id, "Остались:\n" . $this->print_list($new_list));
+                        $this->vk->vk_msg_send($chat_id, "Введите номер фильма, который не хотите смотреть");
+                    } else {
+                        $this->vk->vk_msg_send($chat_id, "Победитель: " . $new_list[0]);
+                        $this->vk->vk_msg_send($chat_id, "Чтобы выбрать еще 1 фильм напишите /start");
+                    }
+                }
         }
         echo 'ok';
     }
 
-    private function count_validation($value) : bool {
+    private function count_validation($value): bool
+    {
         $res = intval($value);
         return !(!$this->is_integer($value) || $res <= 1 || $res > 20);
     }
 
-    private function min_years_validation($value) : bool {
+    private function kick_validation($value, $count): bool
+    {
+        $res = intval($value);
+        return $this->is_integer($value) && $res >= 1 && $res <= $count + 1;
+    }
+
+    private function min_years_validation($value): bool
+    {
         $res = intval($value);
         return ($this->is_integer($value) && $res >= 1920 && $res <= 2022);
     }
 
-    private function max_years_validation($res, $min_years) : bool {
+    private function max_years_validation($res, $min_years): bool
+    {
         return ($res >= 1920 && $res <= 2022 && $res >= $min_years);
     }
 
-    private function is_integer($value) : bool {
+    private function is_integer($value): bool
+    {
         return preg_match("/^\d+$/", $value);
     }
 
-    private function show_films($chat_id) {
+    private function show_films($chat_id)
+    {
         $count = $this->db->get_count($chat_id);
         $min_years = $this->db->get_min_years($chat_id);
         $max_years = $this->db->get_max_years($chat_id);
         $this->logger->debug("Parameters: count=" . $count . ", min_years=" . $min_years . ", max_years=" . $max_years);
-        $films = $this->rnd_film->get_films(new FilmRequest($count, $min_years, $max_years));
+        $films = $this->rnd_film->get_films(new FilmRequest($count + 1, $min_years, $max_years));
         $number = 1;
         foreach ($films as $film) {
             $this->vk->vk_send_film($chat_id, $film, $number);
             $number++;
         }
-        $list = "Итого:\n";
+
         $number = 1;
+        $films_names = array($count + 1);
         foreach ($films as $film) {
-            $list .= $number . ": " . $film->name . "\n";
+            $films_names[$number - 1] = $film->name;
             $number++;
         }
-        $this->vk->vk_msg_send($chat_id, $list);
+        $this->vk->vk_msg_send($chat_id, "Итого:\n" . $this->print_list($films_names));
+        $this->print_list($films_names);
+        $this->db->update_films_list($chat_id, serialize($films_names));
+    }
+
+    private function print_list(array $list) : string
+    {
+        $str = "";
+        for ($i = 0; $i < count($list); $i++) {
+            $str .= ($i + 1) . ": " . $list[$i] . "\n";
+        }
+        return $str;
     }
 
 }

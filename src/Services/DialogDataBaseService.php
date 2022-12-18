@@ -41,6 +41,10 @@ class DialogDataBaseService
         return $this->get($chat_id, 'max_years');
     }
 
+    public function get_films_list($chat_id) : int {
+        return $this->get($chat_id, 'films_list');
+    }
+
     public  function set_status($chat_id, $status) : bool {
         $quarry = 'INSERT INTO Dialog (chat_id, status) VALUES (' . $chat_id . ', '  . $status . ');';
 
@@ -59,6 +63,11 @@ class DialogDataBaseService
     public function update_count($chat_id, $count) : bool {
         return $this->update($chat_id, $count, 'count');
     }
+
+    public function update_films_list($chat_id, $value) : bool {
+        return $this->update($chat_id, $value, 'films_list');
+    }
+
 
     public function update_min_years($chat_id, $min_years) : bool {
         return $this->update($chat_id, $min_years, 'min_years');
