@@ -28,7 +28,7 @@ class ServerHandler extends VKCallbackApiServerHandler
     {
         $this->logger = $logger;
         $this->db = new DialogDataBaseService($connection);
-        $this->vk = new VkApiService($vkApi);
+        $this->vk = new VkApiService($vkApi, $logger);
         $this->rnd_film = new RandomFilmService();
     }
 
