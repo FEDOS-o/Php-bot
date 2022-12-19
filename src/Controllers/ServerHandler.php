@@ -73,44 +73,47 @@ class ServerHandler extends VKCallbackApiServerHandler
         $status = $this->db->get_status($chat_id);
         $text = $object['message']->text;
         if ($text == '/start') {
-            $this->db->update_status($chat_id, 0);
+            $this->db->update_status($chat_id, 1);
             $status = 0;
         }
         switch ($status) {
             case 0:
-                $this->vk->vk_msg_send($chat_id, "Cколько вас?");
-                $this->db->update_status($chat_id, 1);
+                $this->vk->vk_msg_send($chat_id, "Чтобы начать напишите /start");
                 break;
             case 1:
+                $this->vk->vk_msg_send($chat_id, "Cколько вас?");
+                $this->db->update_status($chat_id, 2);
+                break;
+            case 2:
                 if ($this->count_validation($text)) {
-                    $this->db->update_status($chat_id, 2);
+                    $this->db->update_status($chat_id, 3);
                     $this->db->update_count($chat_id, intval($text));
                     $this->vk->vk_msg_send($chat_id, "Укажите минимальный год выхода фильма");
                 } else {
                     $this->vk->vk_msg_send($chat_id, "Нет, вас не может быть столько. Попробуйте еще раз ввести число от 2 до 20");
                 }
                 break;
-            case 2:
+            case 3:
                 if ($this->min_years_validation($text)) {
-                    $this->db->update_status($chat_id, 3);
+                    $this->db->update_status($chat_id, 4);
                     $this->db->update_min_years($chat_id, intval($text));
                     $this->vk->vk_msg_send($chat_id, "Укажите максимальный год выхода фильма");
                 } else {
                     $this->vk->vk_msg_send($chat_id, "Нет, введите год между 1920 и 2022 включительно");
                 }
                 break;
-            case 3:
+            case 4:
                 $res = intval($text);
                 $min_years = $this->db->get_min_years($chat_id);
                 if ($this->is_integer($text) && $this->max_years_validation($res, $min_years)) {
-                    $this->db->update_status($chat_id, 4);
+                    $this->db->update_status($chat_id, 5);
                     $this->db->update_max_years($chat_id, intval($text));
                     $this->vk->vk_msg_send($chat_id, "Подбираю вам случайные фильмы...");
                     if ($this->show_films($chat_id)) {
                         $this->vk->vk_msg_send($chat_id, "Введите номер фильма, который не хотите смотреть");
                     } else {
                         $this->vk->vk_msg_send($chat_id, "Не могу найти столько фильмов для вас в таком диапазоне. Давайте попробуем указать другой временной промежуток");
-                        $this->db->update_status($chat_id, 2);
+                        $this->db->update_status($chat_id, 3);
                         $this->vk->vk_msg_send($chat_id, "Укажите минимальный год выхода фильма");
                     }
                 } else {
