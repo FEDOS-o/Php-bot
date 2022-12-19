@@ -7,6 +7,6 @@
   "MYSQL_USERNAME": "root",
   "MYSQL_PASSWORD": "wsp6WYmX",
   "MYSQL_DATABASE": "VK_BOT",
-  "VK_API_VERSION": "1.131",
+  "VK_API_VERSION": "5.131",
   "LOGGER_DIR": "../log.log"
 }
