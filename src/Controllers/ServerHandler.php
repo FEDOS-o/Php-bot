@@ -80,6 +80,7 @@ class ServerHandler extends VKCallbackApiServerHandler
 В итоге отсается один победитель - фильм в выборе которого поучаствовал каждый человек. Чтобы начать напиши /start");
             $status = 0;
             $this->db->update_status($chat_id, 0);
+            return;
         }
         if ($text == '/start') {
             $this->db->update_status($chat_id, 1);
