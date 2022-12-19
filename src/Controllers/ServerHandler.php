@@ -78,10 +78,7 @@ class ServerHandler extends VKCallbackApiServerHandler
         }
         switch ($status) {
             case 0:
-                $this->vk->vk_msg_send($chat_id, "Привет, Я бот, котрый помогает выбрать фильм для компании.
-                 Вы указываете параметры поиска случайных фильмов и количество людей.
-                 Далее я вам выдаю набор фильмов и вы выбираете порядок в котором каждый человек из компании будет убирать фильм который он не хочет смотреть.
-                 В итоге отсается один победитель. Итак начнем, сколько вас?");
+                $this->vk->vk_msg_send($chat_id, "Cколько вас?");
                 $this->db->update_status($chat_id, 1);
                 break;
             case 1:
@@ -215,6 +212,16 @@ class ServerHandler extends VKCallbackApiServerHandler
             $str .= ($i + 1) . ": " . $list[$i] . "\n";
         }
         return $str;
+    }
+
+
+    public function groupJoin(int $group_id, ?string $secret, array $object)
+    {
+        $chat_id = $object['message']->peer_id;
+        $this->vk->vk_msg_send($chat_id,"Привет, Я бот, котрый помогает выбрать фильм для компании.
+    Вы указываете параметры поиска случайных фильмов и количество людей.
+    Далее я вам выдаю набор фильмов и вы выбираете порядок в котором каждый человек из компании будет убирать фильм который он не хочет смотреть.
+    В итоге отсается один победитель. Чтобы начать напиши /start");
     }
 
 }
