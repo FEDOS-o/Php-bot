@@ -1,0 +1,12 @@
+{
+  "TOKEN": "vk1.a._yZ8p18plSQOmZiPgtYyeO2muWSzEC_ODtMLqaBdCJNHAmkvazycnE2d42YMRaKbOSKb-kxYNsOOD_LcvQhzM_WjJKvNrYwacJF1NhToBYyd3gFnxyW9bMfjOVmCK8hHSi86BBzDEqHz3eniRoE1vqfYZLV9rdV9lM07yrx2YB8KJkxfiO2-vOPAMPDI7vW-zzYzf5RDDNv0MtU-lrmA_w",
+  "GROUP_ID": 217490194,
+  "SECRET": "aaQ1fsdf9ornzqwemc",
+  "CONFIRMATION_TOKEN": "1b52fd41",
+  "MYSQL_HOSTNAME": "localhost",
+  "MYSQL_USERNAME": "root",
+  "MYSQL_PASSWORD": "wsp6WYmX",
+  "MYSQL_DATABASE": "VK_BOT",
+  "VK_API_VERSION": "1.131",
+  "LOGGER_DIR": "../log.log"
+}
