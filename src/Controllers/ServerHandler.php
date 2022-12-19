@@ -73,6 +73,14 @@ class ServerHandler extends VKCallbackApiServerHandler
         $chat_id = $object['message']->peer_id;
         $status = $this->db->get_status($chat_id);
         $text = $object['message']->text;
+        if ($text == "/info") {
+            $this->vk->vk_msg_send($chat_id, "Я бот, котрый помогает выбрать фильм для компании.
+Вы указываете параметры поиска случайных фильмов и количество людей.
+Далее я вам выдаю набор фильмов и вы выбираете порядок в котором каждый человек из компании будет убирать фильм который он не хочет смотреть.
+В итоге отсается один победитель - фильм в выборе которого поучаствовал каждый человек. Чтобы начать напиши /start");
+            $status = 0;
+            $this->db->update_status($chat_id, 0);
+        }
         if ($text == '/start') {
             $this->db->update_status($chat_id, 1);
             $status = 1;
@@ -216,22 +224,6 @@ class ServerHandler extends VKCallbackApiServerHandler
             $str .= ($i + 1) . ": " . $list[$i] . "\n";
         }
         return $str;
-    }
-
-
-    public function groupJoin(int $group_id, ?string $secret, array $object)
-    {
-        $chat_id = $object['user_id'];
-        if ($this->db->has_id($chat_id)) {
-            return;
-        }
-        $this->vk->vk_msg_send($chat_id,"Привет, Я бот, котрый помогает выбрать фильм для компании.
-    Вы указываете параметры поиска случайных фильмов и количество людей.
-    Далее я вам выдаю набор фильмов и вы выбираете порядок в котором каждый человек из компании будет убирать фильм который он не хочет смотреть.
-    В итоге отсается один победитель. Чтобы начать напиши /start");
-        if ($this->db->get_status($chat_id) != 0) {
-            $this->db->update_status($chat_id, 0);
-        }
     }
 
     public function groupLeave(int $group_id, ?string $secret, array $object)
