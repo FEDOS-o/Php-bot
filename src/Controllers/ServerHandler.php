@@ -87,7 +87,7 @@ class ServerHandler extends VKCallbackApiServerHandler
         }
         switch ($status) {
             case 0:
-                $this->vk->vk_msg_send($chat_id, "Чтобы начать напишите /start");
+                $this->vk->vk_msg_send($chat_id, "Привет, Я бот, котрый помогает выбрать фильм для компании. Чтобы узнать поподробнее напиши /info. Чтобы начать напишите /start");
                 break;
             case 1:
                 $this->vk->vk_msg_send($chat_id, "Cколько вас?");
