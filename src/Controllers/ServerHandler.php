@@ -74,6 +74,7 @@ class ServerHandler extends VKCallbackApiServerHandler
         $text = $object['message']->text;
         if ($text == '/start') {
             $this->db->update_status($chat_id, 1);
+            $status = 1;
             $status = 0;
         }
         switch ($status) {
