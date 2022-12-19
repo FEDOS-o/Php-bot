@@ -22,7 +22,7 @@ class VkApiService
     public function vk_msg_send($peer_id, $text)
     {
         $request_params = array(
-            'message' => $text,
+            'message' => mb_convert_encoding($text, "UTF-8"),
             'peer_id' => $peer_id,
             'random_id' => random_int(0, PHP_INT_MAX),
         );
