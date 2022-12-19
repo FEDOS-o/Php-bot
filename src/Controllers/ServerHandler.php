@@ -217,7 +217,7 @@ class ServerHandler extends VKCallbackApiServerHandler
 
     public function groupJoin(int $group_id, ?string $secret, array $object)
     {
-        $chat_id = $object['message']->peer_id;
+        $chat_id = $object['user_id'];
         $this->vk->vk_msg_send($chat_id,"Привет, Я бот, котрый помогает выбрать фильм для компании.
     Вы указываете параметры поиска случайных фильмов и количество людей.
     Далее я вам выдаю набор фильмов и вы выбираете порядок в котором каждый человек из компании будет убирать фильм который он не хочет смотреть.
