@@ -25,6 +25,22 @@ class DialogDataBaseService
         return $fetch;
     }
 
+    public function has_id($chat_id) : bool {
+        $quarry = 'SELECT id FROM Dialog WHERE chat_id=' . $chat_id . ';';
+
+        $result = mysqli_query($this->connection, $quarry);
+
+        $fetch = mysqli_fetch_array($result)['id'];
+
+        return $fetch != null;
+    }
+
+    public function delete_id($chat_id) : bool {
+        $quarry = 'DELETE FROM Dialog WHERE chat_id=' . $chat_id . ';';
+
+        return mysqli_query($this->connection, $quarry);
+    }
+
     public function get_status($chat_id) : int {
         return $this->get($chat_id, 'status');
     }
